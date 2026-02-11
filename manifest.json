@@ -3,6 +3,16 @@
   "name": "Bud-E",
   "version": "0.1.0",
   "description": "Grow your productivity pet by staying on whitelisted websites",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "images/sprites/pumpkin/*.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "permissions": [
     "storage",
     "tabs",
@@ -21,9 +31,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ]
     }
   ],
   "icons": {

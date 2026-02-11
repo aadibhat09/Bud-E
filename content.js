@@ -4,7 +4,9 @@ function createWidget() {
   widget.id = 'growseed-widget';
   widget.innerHTML = `
     <div class="growseed-container">
-      <div class="growseed-pet" id="growseed-pet">🌱</div>
+      <div class="growseed-pet" id="growseed-pet">
+        <img width="25%" height="auto" id="growseed-sprite" src="" alt="Pet">
+      </div>
       <div class="growseed-bar">
         <div class="growseed-fill" id="growseed-fill"></div>
       </div>
@@ -14,35 +16,41 @@ function createWidget() {
   document.body.appendChild(widget);
 }
 
+// Get sprite path based on growth stage
+function getSpriteStage(growthPercent) {
+  if (growthPercent < 1) {
+    return 1; // Seed
+  } else if (growthPercent < 2) {
+    return 2; // Sprout
+  } else if (growthPercent < 3) {
+    return 3; // Seedling
+  } else if (growthPercent < 4) {
+    return 4; // Plant
+  } else if (growthPercent < 5) {
+    return 5; // Flower
+  } else {
+    return 6; // Tree
+  }
+}
+
 // Update widget based on growth
 function updateWidget(growthPercent, isWhitelisted) {
-  const pet = document.getElementById('growseed-pet');
+  const sprite = document.getElementById('growseed-sprite');
   const fill = document.getElementById('growseed-fill');
   const percent = document.getElementById('growseed-percent');
   
-  if (!pet || !fill || !percent) return;
+  if (!sprite || !fill || !percent) return;
   
   // Update progress bar
   fill.style.width = `${growthPercent}%`;
   percent.textContent = `${Math.round(growthPercent)}%`;
   
-  // Update pet emoji based on growth stage
-  if (growthPercent < 20) {
-    pet.textContent = '🌱'; // Seed
-  } else if (growthPercent < 40) {
-    pet.textContent = '🌿'; // Sprout
-  } else if (growthPercent < 60) {
-    pet.textContent = '☘️'; // Seedling
-  } else if (growthPercent < 80) {
-    pet.textContent = '🪴'; // Plant
-  } else if (growthPercent < 95) {
-    pet.textContent = '🌺'; // Flower
-  } else {
-    pet.textContent = '🌳'; // Tree
-  }
+  // Update pet sprite based on growth stage
+  const stage = getSpriteStage(growthPercent);
+  sprite.src = chrome.runtime.getURL(`/images/sprites/pumpkin/${stage}.png`);
   
   // Add visual feedback
-  const container = pet.parentElement;
+  const container = sprite.closest('.growseed-container');
   if (isWhitelisted) {
     container.classList.add('growing');
     container.classList.remove('degrading');
