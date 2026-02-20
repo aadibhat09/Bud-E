@@ -131,6 +131,76 @@
       color: #555;
       margin-top: 4px;
     }
+    
+    .ai-section {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .api-key-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    
+    input[type="password"] {
+      flex: 1;
+      padding: 8px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: monospace;
+    }
+    
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #4285f4;
+    }
+    
+    button.ai-btn {
+      background-color: #4285f4;
+    }
+    
+    button.ai-btn:hover {
+      background-color: #3367d6;
+    }
+    
+    button.ai-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .suggestions-box {
+      margin-top: 12px;
+      padding: 12px;
+      background-color: white;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      display: none;
+    }
+    
+    .suggestions-box.show {
+      display: block;
+    }
+    
+    .loading {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .error {
+      color: #f44336;
+      font-size: 12px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
@@ -163,6 +233,27 @@
     </div>
   </div>
   
+  <div class="section">
+    <div class="ai-section">
+      <div class="section-title">🤖 AI Productivity Coach</div>
+      <div class="api-key-group">
+        <input 
+          type="password" 
+          id="api-key-input" 
+          placeholder="Enter Gemini API Key"
+        />
+        <button id="save-key-btn" class="ai-btn">Save</button>
+      </div>
+      <div class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></div>
+      <button id="get-suggestions-btn" class="ai-btn" style="width: 100%; margin-top: 10px;" disabled>
+        Get Productivity Suggestions
+      </button>
+      <div id="suggestions-box" class="suggestions-box"></div>
+      <div id="error-message" class="error"></div>
+    </div>
+  </div>
+  
+  <script src="gemini-api.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
