@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 400px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+    }
+    
+    h1 {
+      font-size: 20px;
+      margin: 0 0 15px 0;
+      color: #2d5016;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      flex: 1;
+      padding: 8px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    
+    button.remove {
+      background-color: #f44336;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    
+    button.remove:hover {
+      background-color: #da190b;
+    }
+    
+    button.secondary {
+      background-color: #6c757d;
+    }
+    
+    button.secondary:hover {
+      background-color: #5a6268;
+    }
+    
+    .whitelist {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    
+    .whitelist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: #f5f5f5;
+      margin-bottom: 6px;
+      border-radius: 4px;
+    }
+    
+    .whitelist-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .whitelist-url {
+      font-size: 13px;
+      color: #555;
+      word-break: break-all;
+    }
+    
+    .empty-state {
+      text-align: center;
+      color: #999;
+      padding: 20px;
+      font-size: 13px;
+    }
+    
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    
+    .stats {
+      background-color: #e8f5e9;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    
+    .stats-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d5016;
+    }
+    
+    .stats-label {
+      font-size: 12px;
+      color: #555;
+      margin-top: 4px;
+    }
+    
+    .auth-section {
+      background-color: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #ffc107;
+    }
+    
+    .auth-section.authenticated {
+      background-color: #d1ecf1;
+      border-color: #17a2b8;
+    }
+    
+    .auth-status {
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    
+    .user-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .user-email {
+      font-weight: 600;
+      color: #0c5460;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .sync-section {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .sync-status {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      text-align: center;
+    }
+    
+    .leaderboard {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: #f5f5f5;
+      margin-bottom: 6px;
+      border-radius: 4px;
+    }
+    
+    .leaderboard-item:first-child {
+      background-color: #ffd700;
+    }
+    
+    .leaderboard-item:nth-child(2) {
+      background-color: #c0c0c0;
+    }
+    
+    .leaderboard-item:nth-child(3) {
+      background-color: #cd7f32;
+    }
+    
+    .leaderboard-rank {
+      font-weight: 700;
+      color: #333;
+      min-width: 30px;
+    }
+    
+    .leaderboard-name {
+      flex: 1;
+      font-size: 13px;
+      color: #555;
+    }
+    
+    .leaderboard-score {
+      font-weight: 600;
+      color: #2d5016;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 6px;
+      text-align: center;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .tab.active {
+      background-color: #4caf50;
+      color: white;
+    }
+    
+    .error {
+      color: #f44336;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    
+    .success {
+      color: #4caf50;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Bud-E Productivity Tracker</h1>
+  
+  <!-- Authentication Section -->
+  <div class="section">
+    <div class="auth-section" id="auth-section">
+      <div class="section-title">🔐 Backend Authentication</div>
+      <div id="login-form">
+        <input type="email" id="email-input" placeholder="Email" style="width: 100%; margin-bottom: 8px;" />
+        <input type="password" id="password-input" placeholder="Password" style="width: 100%; margin-bottom: 8px;" />
+        <button id="login-btn" style="width: 100%;">Login to Spring Backend</button>
+        <div id="auth-error" class="error"></div>
+      </div>
+      <div id="user-info" class="hidden">
+        <div class="auth-status">✅ Authenticated</div>
+        <div class="user-info">
+          <span class="user-email" id="user-email"></span>
+          <button id="logout-btn" class="secondary">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Stats Section -->
+  <div class="section">
+    <div class="stats">
+      <div class="stats-value" id="growth-percent">0%</div>
+      <div class="stats-label">Current Growth</div>
+    </div>
+  </div>
+  
+  <!-- Sync Section -->
+  <div class="section" id="sync-section">
+    <div class="sync-section">
+      <div class="section-title">☁️ Backend Sync</div>
+      <button id="sync-btn" style="width: 100%;">Sync with Backend</button>
+      <button id="push-btn" style="width: 100%; margin-top: 8px;" class="secondary">Push Local Data</button>
+      <div id="sync-status" class="sync-status">Not synced</div>
+    </div>
+  </div>
+  
+  <!-- Add Website Section -->
+  <div class="section">
+    <div class="section-title">Add Productive Website</div>
+    <div class="input-group">
+      <input 
+        type="text" 
+        id="url-input" 
+        placeholder="e.g., github.com, docs.python.org"
+      />
+      <button id="add-btn">Add</button>
+    </div>
+    <div class="hint">Enter a domain or full URL</div>
+  </div>
+  
+  <!-- Whitelist Section -->
+  <div class="section">
+    <div class="section-title">Whitelisted Websites</div>
+    <div class="whitelist" id="whitelist">
+      <div class="empty-state">No websites added yet</div>
+    </div>
+  </div>
+  
+  <!-- Leaderboard Section -->
+  <div class="section" id="leaderboard-section">
+    <div class="section-title">🏆 Leaderboard</div>
+    <div class="tabs">
+      <button class="tab active" data-sort="current">Current</button>
+      <button class="tab" data-sort="max">Max</button>
+      <button class="tab" data-sort="time">Time</button>
+    </div>
+    <div class="leaderboard" id="leaderboard">
+      <div class="empty-state">Login to view leaderboard</div>
+    </div>
+    <button id="refresh-leaderboard-btn" style="width: 100%; margin-top: 8px;" class="secondary">Refresh</button>
+  </div>
+  
+  <script src="spring-api.js"></script>
+  <script src="gemini-api.js"></script>
+  <script src="popup-enhanced.js"></script>
+</body>
+</html>
