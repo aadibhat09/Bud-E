@@ -5,7 +5,39 @@
 const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 /**
+ * Generate fallback suggestions when API quota is exceeded
+ * @param {Array<string>} whitelist - Current list of productive websites
+ * @param {number} growthPercent - Current growth percentage
+ * @returns {string} - Local productivity suggestions
+ */
+function getLocalFallbackSuggestions(whitelist, growthPercent) {
+  const suggestions = [
+    "1. **Focus Sessions**: Try the Pomodoro Technique - 25 minutes focused work, 5-minute breaks.",
+    "2. **Website Rotation**: You're whitelisting productive sites. Add documentation sites for your tech stack.",
+    "3. **Peak Hours**: Identify your most productive hours and schedule deep work during that time.",
+    "4. **Keep Growing**: Your productivity is at " + Math.round(growthPercent) + "% - you're doing great!"
+  ];
+
+  if (whitelist.length === 0) {
+    suggestions.push("5. **Get Started**: Add your first productive website to the whitelist to begin tracking!");
+  } else if (whitelist.length > 5) {
+    suggestions.push("5. **Quality over Quantity**: You have " + whitelist.length + " whitelisted sites. Focus on the most impactful ones.");
+  }
+
+  if (growthPercent > 80) {
+    suggestions.push("🌟 **Excellent Progress**: You're in the top tier! Maintain this momentum.");
+  } else if (growthPercent > 50) {
+    suggestions.push("📈 **Good Pace**: Keep consistent - small daily improvements add up!");
+  } else {
+    suggestions.push("🚀 **Room to Grow**: Every productive session counts. Build the habit gradually.");
+  }
+
+  return suggestions.join("\n\n");
+}
+
+/**
  * Generate productivity plan suggestions using Gemini API
+ * Falls back to local suggestions if quota is exceeded
  * @param {string} apiKey - Gemini API key
  * @param {Array<string>} whitelist - Current list of productive websites
  * @param {number} growthPercent - Current growth percentage
@@ -57,7 +89,15 @@ Keep the response concise and actionable (under 300 words).`;
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`API Error: ${errorData.error?.message || response.statusText}`);
+      const errorMessage = errorData.error?.message || response.statusText;
+      
+      // Check if it's a quota exceeded error
+      if (errorMessage.includes('quota') || errorMessage.includes('Quota')) {
+        console.warn('Gemini API quota exceeded, using fallback suggestions');
+        return getLocalFallbackSuggestions(whitelist, growthPercent);
+      }
+      
+      throw new Error(`API Error: ${errorMessage}`);
     }
 
     const data = await response.json();
@@ -69,7 +109,9 @@ Keep the response concise and actionable (under 300 words).`;
     }
   } catch (error) {
     console.error('Gemini API Error:', error);
-    throw error;
+    // Fall back to local suggestions on any error
+    console.warn('Using fallback suggestions due to API error');
+    return getLocalFallbackSuggestions(whitelist, growthPercent);
   }
 }
 
