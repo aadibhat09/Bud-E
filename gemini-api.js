@@ -1,6 +1,8 @@
 // Gemini API Integration for Productivity Suggestions
 
-const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+// Using the latest Gemini model (gemini-1.5-flash or gemini-2.0-flash)
+// gemini-pro is deprecated - use newer models instead
+const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 /**
  * Generate productivity plan suggestions using Gemini API
