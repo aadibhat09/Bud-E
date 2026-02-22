@@ -5,7 +5,7 @@ function createWidget() {
   widget.innerHTML = `
     <div class="growseed-container">
       <div class="growseed-pet" id="growseed-pet">
-        <img width="25%" height="auto" id="growseed-sprite" src="" alt="Pet">
+        <img id="growseed-sprite" src="" alt="Pet">
       </div>
       <div class="growseed-bar">
         <div class="growseed-fill" id="growseed-fill"></div>
@@ -38,17 +38,23 @@ function updateWidget(growthPercent, isWhitelisted) {
   const sprite = document.getElementById('growseed-sprite');
   const fill = document.getElementById('growseed-fill');
   const percent = document.getElementById('growseed-percent');
-  
+
   if (!sprite || !fill || !percent) return;
-  
+
   // Update progress bar
   fill.style.width = `${growthPercent}%`;
   percent.textContent = `${Math.round(growthPercent)}%`;
-  
+
   // Update pet sprite based on growth stage
-  const stage = getSpriteStage(growthPercent);
+  let stage = getSpriteStage(growthPercent);
+
+  // If not whitelisted (degrading), use sad sprites (7-12)
+  if (!isWhitelisted) {
+    stage += 6;
+  }
+
   sprite.src = chrome.runtime.getURL(`/images/sprites/pumpkin/${stage}.png`);
-  
+
   // Add visual feedback
   const container = sprite.closest('.growseed-container');
   if (isWhitelisted) {

@@ -6,83 +6,131 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.growseed-container {
-  background: white;
-  border: 3px solid #4caf50;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 120px;
-  text-align: center;
-  transition: transform 0.3s ease;
+#growseed-widget * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.growseed-container:hover {
-  transform: scale(1.05);
+#growseed-widget .growseed-container {
+  background: white !important;
+  border: 2px solid #4caf50 !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  width: 100px !important;
+  text-align: center !important;
+  transition: transform 0.3s ease !important;
 }
 
-.growseed-container.growing {
-  border-color: #4caf50;
-  animation: pulse-grow 2s ease-in-out infinite;
+#growseed-widget .growseed-container:hover {
+  transform: scale(1.1) !important;
 }
 
-.growseed-container.degrading {
-  border-color: #ff9800;
-  animation: pulse-degrade 2s ease-in-out infinite;
+#growseed-widget .growseed-container.growing {
+  border-color: #4caf50 !important;
+  animation: growseed-pulse-grow 2s ease-in-out infinite !important;
 }
 
-@keyframes pulse-grow {
-  0%, 100% { box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); }
-  50% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6); }
+#growseed-widget .growseed-container.degrading {
+  border-color: #ff9800 !important;
+  animation: growseed-pulse-degrade 2s ease-in-out infinite !important;
 }
 
-@keyframes pulse-degrade {
-  0%, 100% { box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3); }
-  50% { box-shadow: 0 4px 20px rgba(255, 152, 0, 0.6); }
+@keyframes growseed-pulse-grow {
+
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 2px 12px rgba(76, 175, 80, 0.6);
+  }
 }
 
-.growseed-pet {
-  font-size: 48px;
-  margin-bottom: 8px;
-  transition: transform 0.5s ease;
+@keyframes growseed-pulse-degrade {
+
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 2px 12px rgba(255, 152, 0, 0.6);
+  }
 }
 
-.growing .growseed-pet {
-  animation: grow 1s ease-in-out;
+#growseed-widget .growseed-pet {
+  margin-bottom: 4px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
-.degrading .growseed-pet {
-  animation: shrink 1s ease-in-out;
+#growseed-widget .growseed-pet img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
 }
 
-@keyframes grow {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+#growseed-widget .growing .growseed-pet img {
+  animation: growseed-bounce 1s ease-in-out infinite !important;
 }
 
-@keyframes shrink {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(0.9); }
+#growseed-widget .degrading .growseed-pet img {
+  animation: growseed-wiggle 1s ease-in-out infinite !important;
 }
 
-.growseed-bar {
-  width: 100%;
-  height: 8px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 8px;
+@keyframes growseed-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
-.growseed-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4caf50, #8bc34a);
-  border-radius: 4px;
-  transition: width 1s ease;
+@keyframes growseed-wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-5deg);
+  }
+
+  75% {
+    transform: rotate(5deg);
+  }
 }
 
-.growseed-percent {
-  font-size: 12px;
-  font-weight: 600;
-  color: #555;
+#growseed-widget .growseed-bar {
+  width: 100% !important;
+  height: 6px !important;
+  background-color: #e0e0e0 !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+  margin-bottom: 4px !important;
+}
+
+#growseed-widget .growseed-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #4caf50, #8bc34a) !important;
+  border-radius: 3px !important;
+  transition: width 1s ease !important;
+}
+
+#growseed-widget .growseed-percent {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #555 !important;
+  display: block !important;
 }
