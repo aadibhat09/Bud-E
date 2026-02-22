@@ -18,18 +18,18 @@ function createWidget() {
 
 // Get sprite path based on growth stage
 function getSpriteStage(growthPercent) {
-  if (growthPercent < 1) {
+  if (growthPercent < 20) {
     return 1; // Seed
-  } else if (growthPercent < 2) {
+  } else if (growthPercent < 40) {
     return 2; // Sprout
-  } else if (growthPercent < 3) {
+  } else if (growthPercent < 60) {
     return 3; // Seedling
-  } else if (growthPercent < 4) {
+  } else if (growthPercent < 80) {
     return 4; // Plant
-  } else if (growthPercent < 5) {
+  } else if (growthPercent < 95) {
     return 5; // Flower
   } else {
-    return 6; // Tree
+    return 6; // Tree (Pumpkin)
   }
 }
 
