@@ -3,18 +3,20 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({
     whitelist: [],
     growthPercent: 0,
-    lastUpdateTime: Date.now()
+    lastUpdateTime: Date.now(),
+    totalProductiveTime: 0,
+    userName: 'User'
   });
 });
 
 // Check if current URL is whitelisted
 function isWhitelisted(url, whitelist) {
   if (!url) return false;
-  
+
   try {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
-    
+
     return whitelist.some(whitelistedUrl => {
       return hostname.includes(whitelistedUrl) || whitelistedUrl.includes(hostname);
     });
@@ -26,36 +28,40 @@ function isWhitelisted(url, whitelist) {
 // Update growth based on current tab
 async function updateGrowth() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  
+
   if (!tab || !tab.url) return;
-  
-  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime']);
+
+  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime']);
   const whitelist = result.whitelist || [];
   const currentGrowth = result.growthPercent || 0;
   const lastUpdate = result.lastUpdateTime || Date.now();
-  
+  const totalProductiveTime = result.totalProductiveTime || 0;
+
   const now = Date.now();
   const timeDiff = (now - lastUpdate) / 1000; // seconds
-  
+
   // Growth/degradation rates (per second)
   const GROWTH_RATE = 0.05; // 3% per minute when productive
   const DEGRADE_RATE = 0.025; // 1.5% per minute when not productive
-  
+
   let newGrowth = currentGrowth;
-  
+  let newTotalProductiveTime = totalProductiveTime;
+
   if (isWhitelisted(tab.url, whitelist)) {
-    // On whitelisted site - grow
+    // On whitelisted site - grow and track time
     newGrowth = Math.min(100, currentGrowth + (GROWTH_RATE * timeDiff));
+    newTotalProductiveTime = totalProductiveTime + timeDiff;
   } else {
     // Not on whitelisted site - degrade
     newGrowth = Math.max(0, currentGrowth - (DEGRADE_RATE * timeDiff));
   }
-  
+
   await chrome.storage.local.set({
     growthPercent: newGrowth,
-    lastUpdateTime: now
+    lastUpdateTime: now,
+    totalProductiveTime: newTotalProductiveTime
   });
-  
+
   // Notify content script to update widget
   chrome.tabs.sendMessage(tab.id, {
     type: 'UPDATE_GROWTH',

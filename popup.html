@@ -201,55 +201,166 @@
       font-size: 12px;
       margin-top: 8px;
     }
+
+    /* Tab Styles */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+    
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: none;
+      color: #666;
+      border: none;
+      border-radius: 0;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .tab-btn:hover {
+      background-color: #f5f5f5;
+      color: #4caf50;
+    }
+    
+    .tab-btn.active {
+      color: #4caf50;
+      border-bottom: 2px solid #4caf50;
+      background: none;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Leaderboard Styles */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .leaderboard-table th, .leaderboard-table td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .leaderboard-table th {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .leaderboard-table td {
+      font-size: 13px;
+    }
+
+    .rank-col { width: 40px; }
+    .score-col { text-align: right; font-weight: 600; }
+
+    .submit-section {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
   </style>
 </head>
 <body>
   <h1>🌱 Bud-E Settings</h1>
-  
-  <div class="section">
-    <div class="stats">
-      <div class="stats-value" id="growth-percent">0%</div>
-      <div class="stats-label">Current Growth</div>
-    </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="main-tab">Main</button>
+    <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
   </div>
   
-  <div class="section">
-    <div class="section-title">Add Productive Website</div>
-    <div class="input-group">
-      <input 
-        type="text" 
-        id="url-input" 
-        placeholder="e.g., github.com, docs.python.org"
-      />
-      <button id="add-btn">Add</button>
-    </div>
-    <div class="hint">Enter a domain or full URL</div>
-  </div>
-  
-  <div class="section">
-    <div class="section-title">Whitelisted Websites</div>
-    <div class="whitelist" id="whitelist">
-      <div class="empty-state">No websites added yet</div>
-    </div>
-  </div>
-  
-  <div class="section">
-    <div class="ai-section">
-      <div class="section-title">🤖 AI Productivity Coach</div>
-      <div class="api-key-group">
-        <input 
-          type="password" 
-          id="api-key-input" 
-          placeholder="Enter Gemini API Key"
-        />
-        <button id="save-key-btn" class="ai-btn">Save</button>
+  <div id="main-tab" class="tab-content active">
+    <div class="section">
+      <div class="section-title">User Settings</div>
+      <div class="input-group">
+        <input type="text" id="username-input" placeholder="Your Name" />
+        <button id="save-username-btn">Save Name</button>
       </div>
-      <div class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></div>
-      <button id="get-suggestions-btn" class="ai-btn" style="width: 100%; margin-top: 10px;" disabled>
-        Get Productivity Suggestions
-      </button>
-      <div id="suggestions-box" class="suggestions-box"></div>
-      <div id="error-message" class="error"></div>
+    </div>
+
+    <div class="section">
+      <div class="stats">
+        <div class="stats-value" id="growth-percent">0%</div>
+        <div class="stats-label">Current Growth</div>
+        <div class="stats-label" style="margin-top: 10px;">Total Productive Time</div>
+        <div class="stats-value" id="total-time" style="font-size: 18px;">0s</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-title">Add Productive Website</div>
+      <div class="input-group">
+        <input 
+          type="text" 
+          id="url-input" 
+          placeholder="e.g., github.com, docs.python.org"
+        />
+        <button id="add-btn">Add</button>
+      </div>
+      <div class="hint">Enter a domain or full URL</div>
+    </div>
+    
+    <div class="section">
+      <div class="section-title">Whitelisted Websites</div>
+      <div class="whitelist" id="whitelist">
+        <div class="empty-state">No websites added yet</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="ai-section">
+        <div class="section-title">🤖 AI Productivity Coach</div>
+        <div class="api-key-group">
+          <input 
+            type="password" 
+            id="api-key-input" 
+            placeholder="Enter Gemini API Key"
+          />
+          <button id="save-key-btn" class="ai-btn">Save</button>
+        </div>
+        <div class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></div>
+        <button id="get-suggestions-btn" class="ai-btn" style="width: 100%; margin-top: 10px;" disabled>
+          Get Productivity Suggestions
+        </button>
+        <div id="suggestions-box" class="suggestions-box"></div>
+        <div id="error-message" class="error"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="leaderboard-tab" class="tab-content">
+    <div class="section">
+      <div class="section-title">Global Leaderboard</div>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th class="rank-col">#</th>
+            <th>Name</th>
+            <th class="score-col">Time</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <!-- Leaderboard items will be injected here -->
+        </tbody>
+      </table>
+      <div id="leaderboard-loading" class="hint" style="text-align: center; margin-top: 10px;">Loading scores...</div>
+      
+      <div class="submit-section">
+        <button id="submit-score-btn" style="width: 100%;">Submit My Score</button>
+        <div id="submit-status" class="hint" style="text-align: center; margin-top: 8px;"></div>
+      </div>
     </div>
   </div>
   
