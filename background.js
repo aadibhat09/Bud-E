@@ -5,9 +5,19 @@ chrome.runtime.onInstalled.addListener(() => {
     growthPercent: 0,
     lastUpdateTime: Date.now(),
     totalProductiveTime: 0,
-    userName: 'User'
+    userName: 'User',
+    mode: 'personal'
   });
 });
+
+const COMPETITIVE_WHITELIST = [
+  'github.com',
+  'stackoverflow.com',
+  'developer.mozilla.org',
+  'docs.python.org',
+  'leetcode.com',
+  'hackerrank.com'
+];
 
 // Check if current URL is whitelisted
 function isWhitelisted(url, whitelist) {
@@ -31,8 +41,9 @@ async function updateGrowth() {
 
   if (!tab || !tab.url) return;
 
-  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime']);
-  const whitelist = result.whitelist || [];
+  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime', 'mode']);
+  const mode = result.mode || 'personal';
+  const whitelist = mode === 'competitive' ? COMPETITIVE_WHITELIST : (result.whitelist || []);
   const currentGrowth = result.growthPercent || 0;
   const lastUpdate = result.lastUpdateTime || Date.now();
   const totalProductiveTime = result.totalProductiveTime || 0;

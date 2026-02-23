@@ -264,6 +264,42 @@ async function submitScore() {
   }
 }
 
+// Mode Toggle Logic
+function updateModeUI(mode) {
+  const isCompetitive = mode === 'competitive';
+  
+  // Update toggle switch UI
+  document.getElementById('mode-toggle').checked = isCompetitive;
+  document.getElementById('label-personal').classList.toggle('active', !isCompetitive);
+  document.getElementById('label-competitive').classList.toggle('active', isCompetitive);
+
+  // Show/hide sections
+  document.getElementById('add-website-section').style.display = isCompetitive ? 'none' : 'block';
+  document.getElementById('whitelist-section').style.display = isCompetitive ? 'none' : 'block';
+  document.getElementById('ai-coach-section').style.display = isCompetitive ? 'none' : 'block';
+  
+  // Show/hide leaderboard tab
+  const leaderboardTabBtn = document.getElementById('leaderboard-tab-btn');
+  leaderboardTabBtn.style.display = isCompetitive ? 'block' : 'none';
+  
+  // If switching to personal and currently on leaderboard tab, switch back to main tab
+  if (!isCompetitive && leaderboardTabBtn.classList.contains('active')) {
+    document.querySelector('.tab-btn[data-tab="main-tab"]').click();
+  }
+}
+
+async function loadMode() {
+  const result = await chrome.storage.local.get(['mode']);
+  const mode = result.mode || 'personal';
+  updateModeUI(mode);
+}
+
+document.getElementById('mode-toggle').addEventListener('change', async (e) => {
+  const mode = e.target.checked ? 'competitive' : 'personal';
+  await chrome.storage.local.set({ mode });
+  updateModeUI(mode);
+});
+
 // Event listeners
 document.getElementById('add-btn').addEventListener('click', addToWhitelist);
 document.getElementById('url-input').addEventListener('keypress', (e) => {
@@ -285,3 +321,4 @@ document.getElementById('submit-score-btn').addEventListener('click', submitScor
 loadWhitelist();
 loadApiKey();
 setupTabs();
+loadMode();

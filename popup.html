@@ -271,14 +271,95 @@
       padding-top: 15px;
       border-top: 1px solid #eee;
     }
+
+    /* Toggle Switch Styles */
+    .mode-toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .mode-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin: 0 10px;
+      transition: color 0.3s;
+    }
+
+    .mode-label.active {
+      color: #4caf50;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #4caf50;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .mode-label.competitive.active {
+      color: #2196F3;
+    }
   </style>
 </head>
 <body>
   <h1>🌱 Bud-E Settings</h1>
 
-  <div class="tabs">
+  <div class="mode-toggle-container">
+    <span class="mode-label personal active" id="label-personal">Personal</span>
+    <label class="switch">
+      <input type="checkbox" id="mode-toggle">
+      <span class="slider"></span>
+    </label>
+    <span class="mode-label competitive" id="label-competitive">Competitive</span>
+  </div>
+
+  <div class="tabs" id="tabs-container">
     <button class="tab-btn active" data-tab="main-tab">Main</button>
-    <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
+    <button class="tab-btn" data-tab="leaderboard-tab" id="leaderboard-tab-btn" style="display: none;">Leaderboard</button>
   </div>
   
   <div id="main-tab" class="tab-content active">
@@ -299,7 +380,7 @@
       </div>
     </div>
     
-    <div class="section">
+    <div class="section" id="add-website-section">
       <div class="section-title">Add Productive Website</div>
       <div class="input-group">
         <input 
@@ -312,14 +393,14 @@
       <div class="hint">Enter a domain or full URL</div>
     </div>
     
-    <div class="section">
+    <div class="section" id="whitelist-section">
       <div class="section-title">Whitelisted Websites</div>
       <div class="whitelist" id="whitelist">
         <div class="empty-state">No websites added yet</div>
       </div>
     </div>
     
-    <div class="section">
+    <div class="section" id="ai-coach-section">
       <div class="ai-section">
         <div class="section-title">🤖 AI Productivity Coach</div>
         <div class="api-key-group">
