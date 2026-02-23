@@ -83,67 +83,6 @@ async function removeFromWhitelist(url) {
   loadWhitelist();
 }
 
-// Save Gemini API key
-async function saveApiKey() {
-  const apiKey = document.getElementById('api-key-input').value.trim();
-  const errorElement = document.getElementById('error-message');
-
-  if (!apiKey) {
-    errorElement.textContent = 'Please enter an API key';
-    return;
-  }
-
-  await chrome.storage.local.set({ geminiApiKey: apiKey });
-  document.getElementById('get-suggestions-btn').disabled = false;
-  errorElement.textContent = '';
-
-  // Show success feedback
-  const saveBtn = document.getElementById('save-key-btn');
-  const originalText = saveBtn.textContent;
-  saveBtn.textContent = '✓ Saved';
-  setTimeout(() => {
-    saveBtn.textContent = originalText;
-  }, 2000);
-}
-
-// Get productivity suggestions from Gemini
-async function getProductivityPlan() {
-  const suggestionsBox = document.getElementById('suggestions-box');
-  const errorElement = document.getElementById('error-message');
-  const button = document.getElementById('get-suggestions-btn');
-
-  // Clear previous content
-  errorElement.textContent = '';
-  suggestionsBox.textContent = 'Loading suggestions...';
-  suggestionsBox.classList.add('show', 'loading');
-  button.disabled = true;
-
-  try {
-    const result = await chrome.storage.local.get(['geminiApiKey', 'whitelist', 'growthPercent']);
-    const apiKey = result.geminiApiKey;
-    const whitelist = result.whitelist || [];
-    const growthPercent = result.growthPercent || 0;
-
-    if (!apiKey) {
-      throw new Error('API key not found. Please save your API key first.');
-    }
-
-    // Call Gemini API
-    const suggestions = await getProductivitySuggestions(apiKey, whitelist, growthPercent);
-
-    // Display suggestions
-    suggestionsBox.classList.remove('loading');
-    suggestionsBox.textContent = suggestions;
-
-  } catch (error) {
-    console.error('Error getting suggestions:', error);
-    errorElement.textContent = `Error: ${error.message}`;
-    suggestionsBox.classList.remove('show', 'loading');
-  } finally {
-    button.disabled = false;
-  }
-}
-
 // Tab Switching logic
 function setupTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
@@ -276,14 +215,18 @@ function updateModeUI(mode) {
   // Show/hide sections
   document.getElementById('add-website-section').style.display = isSchool ? 'none' : 'block';
   document.getElementById('whitelist-section').style.display = isSchool ? 'none' : 'block';
-  document.getElementById('ai-coach-section').style.display = isSchool ? 'none' : 'block';
   
-  // Show/hide leaderboard tab
+  // Show/hide tabs
   const leaderboardTabBtn = document.getElementById('leaderboard-tab-btn');
-  leaderboardTabBtn.style.display = isSchool ? 'block' : 'none';
+  const aiPlannerTabBtn = document.getElementById('ai-planner-tab-btn');
   
-  // If switching to personal and currently on leaderboard tab, switch back to main tab
-  if (!isSchool && leaderboardTabBtn.classList.contains('active')) {
+  leaderboardTabBtn.style.display = isSchool ? 'block' : 'none';
+  aiPlannerTabBtn.style.display = isSchool ? 'none' : 'block';
+  
+  // Handle tab switching when mode changes
+  if (isSchool && aiPlannerTabBtn.classList.contains('active')) {
+    document.querySelector('.tab-btn[data-tab="main-tab"]').click();
+  } else if (!isSchool && leaderboardTabBtn.classList.contains('active')) {
     document.querySelector('.tab-btn[data-tab="main-tab"]').click();
   }
 }
@@ -306,12 +249,62 @@ document.getElementById('url-input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addToWhitelist();
 });
 
-// AI productivity coach listeners
-document.getElementById('save-key-btn').addEventListener('click', saveApiKey);
-document.getElementById('api-key-input').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') saveApiKey();
+// AI Planner listeners
+document.getElementById('plan-time').addEventListener('input', (e) => {
+  document.getElementById('plan-time-val').textContent = e.target.value;
 });
-document.getElementById('get-suggestions-btn').addEventListener('click', getProductivityPlan);
+
+document.getElementById('plan-distraction').addEventListener('input', (e) => {
+  const vals = ['Low', 'Medium', 'High'];
+  document.getElementById('plan-distraction-val').textContent = vals[e.target.value - 1];
+});
+
+document.getElementById('generate-plan-btn').addEventListener('click', async () => {
+  const btn = document.getElementById('generate-plan-btn');
+  const status = document.getElementById('plan-status');
+  const box = document.getElementById('generated-plan-box');
+  
+  btn.disabled = true;
+  status.textContent = 'Generating plan...';
+  box.classList.remove('show');
+  
+  const getCheckedValues = (className) => {
+    return Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
+  };
+
+  const payload = {
+    educationLevel: document.getElementById('plan-education').value,
+    timeAvailableHours: parseInt(document.getElementById('plan-time').value),
+    sessionLength: document.getElementById('plan-session-length').value,
+    peakFocusTime: document.getElementById('plan-peak-time').value,
+    subjects: getCheckedValues('plan-subject'),
+    learningMethods: getCheckedValues('plan-method'),
+    workRestCycle: document.getElementById('plan-cycle').value,
+    distractionTolerance: document.getElementById('plan-distraction-val').textContent
+  };
+
+  try {
+    const response = await fetch('http://localhost:8585/api/productivity_planner', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error('Failed to generate plan');
+    
+    const data = await response.json();
+    
+    box.textContent = data.plan || JSON.stringify(data, null, 2);
+    box.classList.add('show');
+    status.textContent = 'Plan generated successfully!';
+  } catch (error) {
+    console.error('Plan generation error:', error);
+    status.textContent = `Error: ${error.message}`;
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => { if (status.textContent !== 'Generating plan...') status.textContent = ''; }, 3000);
+  }
+});
 
 // New listeners
 document.getElementById('save-username-btn').addEventListener('click', saveUsername);
