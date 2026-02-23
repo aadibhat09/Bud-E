@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <style>
@@ -9,30 +10,30 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
     }
-    
+
     h1 {
       font-size: 20px;
       margin: 0 0 15px 0;
       color: #2d5016;
     }
-    
+
     .section {
       margin-bottom: 20px;
     }
-    
+
     .section-title {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 8px;
       color: #333;
     }
-    
+
     .input-group {
       display: flex;
       gap: 8px;
       margin-bottom: 10px;
     }
-    
+
     input[type="text"] {
       flex: 1;
       padding: 8px 12px;
@@ -40,12 +41,12 @@
       border-radius: 6px;
       font-size: 13px;
     }
-    
+
     input[type="text"]:focus {
       outline: none;
       border-color: #4caf50;
     }
-    
+
     button {
       padding: 8px 16px;
       background-color: #4caf50;
@@ -56,21 +57,21 @@
       font-size: 13px;
       font-weight: 500;
     }
-    
+
     button:hover {
       background-color: #45a049;
     }
-    
+
     button.remove {
       background-color: #f44336;
       padding: 4px 8px;
       font-size: 12px;
     }
-    
+
     button.remove:hover {
       background-color: #da190b;
     }
-    
+
     .whitelist {
       max-height: 200px;
       overflow-y: auto;
@@ -78,7 +79,7 @@
       border-radius: 6px;
       padding: 8px;
     }
-    
+
     .whitelist-item {
       display: flex;
       justify-content: space-between;
@@ -88,63 +89,63 @@
       margin-bottom: 6px;
       border-radius: 4px;
     }
-    
+
     .whitelist-item:last-child {
       margin-bottom: 0;
     }
-    
+
     .whitelist-url {
       font-size: 13px;
       color: #555;
       word-break: break-all;
     }
-    
+
     .empty-state {
       text-align: center;
       color: #999;
       padding: 20px;
       font-size: 13px;
     }
-    
+
     .hint {
       font-size: 12px;
       color: #666;
       margin-top: 4px;
       font-style: italic;
     }
-    
+
     .stats {
       background-color: #e8f5e9;
       padding: 12px;
       border-radius: 6px;
       text-align: center;
     }
-    
+
     .stats-value {
       font-size: 24px;
       font-weight: 700;
       color: #2d5016;
     }
-    
+
     .stats-label {
       font-size: 12px;
       color: #555;
       margin-top: 4px;
     }
-    
+
     .ai-section {
       background-color: #f8f9fa;
       padding: 15px;
       border-radius: 8px;
       border: 2px solid #e0e0e0;
     }
-    
+
     .api-key-group {
       display: flex;
       gap: 8px;
       margin-bottom: 10px;
     }
-    
+
     input[type="password"] {
       flex: 1;
       padding: 8px 12px;
@@ -153,25 +154,25 @@
       font-size: 13px;
       font-family: monospace;
     }
-    
+
     input[type="password"]:focus {
       outline: none;
       border-color: #4285f4;
     }
-    
+
     button.ai-btn {
       background-color: #4285f4;
     }
-    
+
     button.ai-btn:hover {
       background-color: #3367d6;
     }
-    
+
     button.ai-btn:disabled {
       background-color: #ccc;
       cursor: not-allowed;
     }
-    
+
     .suggestions-box {
       margin-top: 12px;
       padding: 12px;
@@ -185,17 +186,17 @@
       white-space: pre-wrap;
       display: none;
     }
-    
+
     .suggestions-box.show {
       display: block;
     }
-    
+
     .loading {
       text-align: center;
       color: #666;
       font-style: italic;
     }
-    
+
     .error {
       color: #f44336;
       font-size: 12px;
@@ -208,7 +209,7 @@
       border-bottom: 2px solid #e0e0e0;
       margin-bottom: 20px;
     }
-    
+
     .tab-btn {
       flex: 1;
       padding: 10px;
@@ -220,12 +221,12 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .tab-btn:hover {
       background-color: #f5f5f5;
       color: #4caf50;
     }
-    
+
     .tab-btn.active {
       color: #4caf50;
       border-bottom: 2px solid #4caf50;
@@ -247,7 +248,8 @@
       margin-top: 10px;
     }
 
-    .leaderboard-table th, .leaderboard-table td {
+    .leaderboard-table th,
+    .leaderboard-table td {
       text-align: left;
       padding: 8px;
       border-bottom: 1px solid #eee;
@@ -263,8 +265,14 @@
       font-size: 13px;
     }
 
-    .rank-col { width: 40px; }
-    .score-col { text-align: right; font-weight: 600; }
+    .rank-col {
+      width: 40px;
+    }
+
+    .score-col {
+      text-align: right;
+      font-weight: 600;
+    }
 
     .submit-section {
       margin-top: 20px;
@@ -332,11 +340,11 @@
       border-radius: 50%;
     }
 
-    input:checked + .slider {
+    input:checked+.slider {
       background-color: #2196F3;
     }
 
-    input:checked + .slider:before {
+    input:checked+.slider:before {
       transform: translateX(26px);
     }
 
@@ -345,8 +353,13 @@
     }
   </style>
 </head>
+
 <body>
-  <h1>🌱 Bud-E Settings</h1>
+  <h1 style="display: flex; align-items: center;">
+    <img src="images/sprites/pumpkin/5.png" alt="Bud-E"
+      style="width: 28px; height: 28px; margin-right: 8px; object-fit: contain;">
+    Bud-E Settings
+  </h1>
 
   <div class="mode-toggle-container">
     <span class="mode-label personal active" id="label-personal">Personal</span>
@@ -359,9 +372,10 @@
 
   <div class="tabs" id="tabs-container">
     <button class="tab-btn active" data-tab="main-tab">Main</button>
-    <button class="tab-btn" data-tab="leaderboard-tab" id="leaderboard-tab-btn" style="display: none;">Leaderboard</button>
+    <button class="tab-btn" data-tab="leaderboard-tab" id="leaderboard-tab-btn"
+      style="display: none;">Leaderboard</button>
   </div>
-  
+
   <div id="main-tab" class="tab-content active">
     <div class="section">
       <div class="section-title">User Settings</div>
@@ -379,39 +393,32 @@
         <div class="stats-value" id="total-time" style="font-size: 18px;">0s</div>
       </div>
     </div>
-    
+
     <div class="section" id="add-website-section">
       <div class="section-title">Add Productive Website</div>
       <div class="input-group">
-        <input 
-          type="text" 
-          id="url-input" 
-          placeholder="e.g., github.com, docs.python.org"
-        />
+        <input type="text" id="url-input" placeholder="e.g., github.com, docs.python.org" />
         <button id="add-btn">Add</button>
       </div>
       <div class="hint">Enter a domain or full URL</div>
     </div>
-    
+
     <div class="section" id="whitelist-section">
       <div class="section-title">Whitelisted Websites</div>
       <div class="whitelist" id="whitelist">
         <div class="empty-state">No websites added yet</div>
       </div>
     </div>
-    
+
     <div class="section" id="ai-coach-section">
       <div class="ai-section">
         <div class="section-title">🤖 AI Productivity Coach</div>
         <div class="api-key-group">
-          <input 
-            type="password" 
-            id="api-key-input" 
-            placeholder="Enter Gemini API Key"
-          />
+          <input type="password" id="api-key-input" placeholder="Enter Gemini API Key" />
           <button id="save-key-btn" class="ai-btn">Save</button>
         </div>
-        <div class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></div>
+        <div class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey"
+            target="_blank">Google AI Studio</a></div>
         <button id="get-suggestions-btn" class="ai-btn" style="width: 100%; margin-top: 10px;" disabled>
           Get Productivity Suggestions
         </button>
@@ -437,15 +444,16 @@
         </tbody>
       </table>
       <div id="leaderboard-loading" class="hint" style="text-align: center; margin-top: 10px;">Loading scores...</div>
-      
+
       <div class="submit-section">
         <button id="submit-score-btn" style="width: 100%;">Submit My Score</button>
         <div id="submit-status" class="hint" style="text-align: center; margin-top: 8px;"></div>
       </div>
     </div>
   </div>
-  
+
   <script src="gemini-api.js"></script>
   <script src="popup.js"></script>
 </body>
+
 </html>
