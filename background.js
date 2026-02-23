@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-const COMPETITIVE_WHITELIST = [
+const SCHOOL_WHITELIST = [
   'github.com',
   'stackoverflow.com',
   'developer.mozilla.org',
@@ -43,7 +43,7 @@ async function updateGrowth() {
 
   const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime', 'mode']);
   const mode = result.mode || 'personal';
-  const whitelist = mode === 'competitive' ? COMPETITIVE_WHITELIST : (result.whitelist || []);
+  const whitelist = mode === 'school' ? SCHOOL_WHITELIST : (result.whitelist || []);
   const currentGrowth = result.growthPercent || 0;
   const lastUpdate = result.lastUpdateTime || Date.now();
   const totalProductiveTime = result.totalProductiveTime || 0;

@@ -266,24 +266,24 @@ async function submitScore() {
 
 // Mode Toggle Logic
 function updateModeUI(mode) {
-  const isCompetitive = mode === 'competitive';
+  const isSchool = mode === 'school';
   
   // Update toggle switch UI
-  document.getElementById('mode-toggle').checked = isCompetitive;
-  document.getElementById('label-personal').classList.toggle('active', !isCompetitive);
-  document.getElementById('label-competitive').classList.toggle('active', isCompetitive);
+  document.getElementById('mode-toggle').checked = isSchool;
+  document.getElementById('label-personal').classList.toggle('active', !isSchool);
+  document.getElementById('label-school').classList.toggle('active', isSchool);
 
   // Show/hide sections
-  document.getElementById('add-website-section').style.display = isCompetitive ? 'none' : 'block';
-  document.getElementById('whitelist-section').style.display = isCompetitive ? 'none' : 'block';
-  document.getElementById('ai-coach-section').style.display = isCompetitive ? 'none' : 'block';
+  document.getElementById('add-website-section').style.display = isSchool ? 'none' : 'block';
+  document.getElementById('whitelist-section').style.display = isSchool ? 'none' : 'block';
+  document.getElementById('ai-coach-section').style.display = isSchool ? 'none' : 'block';
   
   // Show/hide leaderboard tab
   const leaderboardTabBtn = document.getElementById('leaderboard-tab-btn');
-  leaderboardTabBtn.style.display = isCompetitive ? 'block' : 'none';
+  leaderboardTabBtn.style.display = isSchool ? 'block' : 'none';
   
   // If switching to personal and currently on leaderboard tab, switch back to main tab
-  if (!isCompetitive && leaderboardTabBtn.classList.contains('active')) {
+  if (!isSchool && leaderboardTabBtn.classList.contains('active')) {
     document.querySelector('.tab-btn[data-tab="main-tab"]').click();
   }
 }
@@ -295,7 +295,7 @@ async function loadMode() {
 }
 
 document.getElementById('mode-toggle').addEventListener('change', async (e) => {
-  const mode = e.target.checked ? 'competitive' : 'personal';
+  const mode = e.target.checked ? 'school' : 'personal';
   await chrome.storage.local.set({ mode });
   updateModeUI(mode);
 });
