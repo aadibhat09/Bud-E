@@ -99,9 +99,34 @@ function setupTabs() {
 
       if (contentId === 'leaderboard-tab') {
         loadLeaderboard();
+      } else if (contentId === 'logger-tab') {
+        loadLogger();
       }
     });
   });
+}
+
+// Logger Tab
+async function loadLogger() {
+  const result = await chrome.storage.local.get(['urlTimeLog']);
+  const urlTimeLog = result.urlTimeLog || {};
+  const container = document.getElementById('url-time-log');
+
+  if (Object.keys(urlTimeLog).length === 0) {
+    container.innerHTML = '<div class="empty-state">No time logged yet</div>';
+    return;
+  }
+
+  // Sort by time spent (descending)
+  const sortedLogs = Object.entries(urlTimeLog)
+    .sort(([, timeA], [, timeB]) => timeB - timeA);
+
+  container.innerHTML = sortedLogs.map(([url, time]) => `
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+      <span style="word-break: break-all; padding-right: 10px;">${url}</span>
+      <span style="font-weight: 600; white-space: nowrap;">${formatTime(time)}</span>
+    </div>
+  `).join('');
 }
 
 // User Settings
@@ -219,14 +244,16 @@ function updateModeUI(mode) {
   // Show/hide tabs
   const leaderboardTabBtn = document.getElementById('leaderboard-tab-btn');
   const aiPlannerTabBtn = document.getElementById('ai-planner-tab-btn');
+  const loggerTabBtn = document.getElementById('logger-tab-btn');
   
   leaderboardTabBtn.style.display = isSchool ? 'block' : 'none';
   aiPlannerTabBtn.style.display = isSchool ? 'none' : 'block';
+  loggerTabBtn.style.display = isSchool ? 'block' : 'none';
   
   // Handle tab switching when mode changes
   if (isSchool && aiPlannerTabBtn.classList.contains('active')) {
     document.querySelector('.tab-btn[data-tab="main-tab"]').click();
-  } else if (!isSchool && leaderboardTabBtn.classList.contains('active')) {
+  } else if (!isSchool && (leaderboardTabBtn.classList.contains('active') || loggerTabBtn.classList.contains('active'))) {
     document.querySelector('.tab-btn[data-tab="main-tab"]').click();
   }
 }
@@ -315,3 +342,4 @@ loadWhitelist();
 loadApiKey();
 setupTabs();
 loadMode();
+loadLogger();

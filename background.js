@@ -1,23 +1,29 @@
+const PERSONAL_WHITELIST = [
+  'instructure.com',
+  'github.com',
+  'google.com',
+  'wikipedia.org'
+];
+
+const SCHOOL_WHITELIST = [
+  ...PERSONAL_WHITELIST,
+  'opencodingsociety.com',
+  'chatgpt.com',
+  'claude.ai'
+];
+
 // Initialize storage
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({
-    whitelist: [],
+    whitelist: PERSONAL_WHITELIST,
     growthPercent: 0,
     lastUpdateTime: Date.now(),
     totalProductiveTime: 0,
     userName: 'User',
-    mode: 'personal'
+    mode: 'personal',
+    urlTimeLog: {}
   });
 });
-
-const SCHOOL_WHITELIST = [
-  'github.com',
-  'stackoverflow.com',
-  'developer.mozilla.org',
-  'docs.python.org',
-  'leetcode.com',
-  'hackerrank.com'
-];
 
 // Check if current URL is whitelisted
 function isWhitelisted(url, whitelist) {
@@ -41,12 +47,13 @@ async function updateGrowth() {
 
   if (!tab || !tab.url) return;
 
-  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime', 'mode']);
+  const result = await chrome.storage.local.get(['whitelist', 'growthPercent', 'lastUpdateTime', 'totalProductiveTime', 'mode', 'urlTimeLog']);
   const mode = result.mode || 'personal';
   const whitelist = mode === 'school' ? SCHOOL_WHITELIST : (result.whitelist || []);
   const currentGrowth = result.growthPercent || 0;
   const lastUpdate = result.lastUpdateTime || Date.now();
   const totalProductiveTime = result.totalProductiveTime || 0;
+  const urlTimeLog = result.urlTimeLog || {};
 
   const now = Date.now();
   const timeDiff = (now - lastUpdate) / 1000; // seconds
@@ -67,10 +74,20 @@ async function updateGrowth() {
     newGrowth = Math.max(0, currentGrowth - (DEGRADE_RATE * timeDiff));
   }
 
+  // Track specific URL time
+  try {
+    const urlObj = new URL(tab.url);
+    if (urlObj.protocol === 'http:' || urlObj.protocol === 'https:') {
+      const specificUrl = urlObj.hostname + (urlObj.pathname === '/' ? '' : urlObj.pathname);
+      urlTimeLog[specificUrl] = (urlTimeLog[specificUrl] || 0) + timeDiff;
+    }
+  } catch (e) {}
+
   await chrome.storage.local.set({
     growthPercent: newGrowth,
     lastUpdateTime: now,
-    totalProductiveTime: newTotalProductiveTime
+    totalProductiveTime: newTotalProductiveTime,
+    urlTimeLog: urlTimeLog
   });
 
   // Notify content script to update widget

@@ -375,6 +375,7 @@
     <button class="tab-btn" data-tab="leaderboard-tab" id="leaderboard-tab-btn"
       style="display: none;">Leaderboard</button>
     <button class="tab-btn" data-tab="ai-planner-tab" id="ai-planner-tab-btn">AI Planner</button>
+    <button class="tab-btn" data-tab="logger-tab" id="logger-tab-btn" style="display: none;">Logger</button>
   </div>
 
   <div id="main-tab" class="tab-content active">
@@ -518,6 +519,15 @@
       <button id="generate-plan-btn" class="ai-btn" style="width: 100%;">Generate Plan</button>
       <div id="plan-status" class="hint" style="text-align: center; margin-top: 8px;"></div>
       <div id="generated-plan-box" class="suggestions-box"></div>
+    </div>
+  </div>
+
+  <div id="logger-tab" class="tab-content">
+    <div class="section">
+      <div class="section-title">Time Logged per Site</div>
+      <div id="url-time-log" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px; font-size: 13px;">
+        <div class="empty-state">No time logged yet</div>
+      </div>
     </div>
   </div>
 
