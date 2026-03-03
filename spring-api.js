@@ -1,8 +1,13 @@
 // Spring Backend API Integration for Bud-E Productivity Tracker
 
 // Configuration
-const SPRING_API_BASE_URL = 'http://localhost:8585'; // Change to your Spring backend URL
-// For production: 'https://spring.opencodingsociety.com'
+async function getBaseUrl() {
+  const result = await chrome.storage.local.get(['userName']);
+  if (result.userName === "ADMIN_3749") {
+    return 'http://localhost:8585';
+  }
+  return 'https://spring.opencodingsociety.com';
+}
 
 /**
  * Get JWT token from storage
@@ -36,7 +41,7 @@ async function clearJwtToken() {
  */
 async function authenticate(email, password) {
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/authenticate`, {
+    const response = await fetch(`${await getBaseUrl()}/authenticate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +79,7 @@ async function getProductivityData() {
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/data`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/data`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -123,7 +128,7 @@ async function updateProductivityData(whitelist, growthPercent, suggestions = nu
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/data`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/data`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -162,7 +167,7 @@ async function updateWhitelist(whitelist) {
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/whitelist`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/whitelist`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -201,7 +206,7 @@ async function updateGrowth(growthPercent) {
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/growth`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/growth`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -241,7 +246,7 @@ async function updateStats(productiveTimeSeconds, incrementSession) {
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/stats`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/stats`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -285,7 +290,7 @@ async function getLeaderboard(sortBy = 'current', limit = 10) {
 
   try {
     const response = await fetch(
-      `${SPRING_API_BASE_URL}/api/productivity/leaderboard?sortBy=${sortBy}&limit=${limit}`,
+      `${await getBaseUrl()}/api/productivity/leaderboard?sortBy=${sortBy}&limit=${limit}`,
       {
         method: 'GET',
         headers: {
@@ -326,7 +331,7 @@ async function updateSettings(displayName, publicLeaderboard) {
   }
 
   try {
-    const response = await fetch(`${SPRING_API_BASE_URL}/api/productivity/settings`, {
+    const response = await fetch(`${await getBaseUrl()}/api/productivity/settings`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

@@ -142,8 +142,20 @@ async function saveUsername() {
   }
 }
 
+// API Configuration
+async function getBaseUrl() {
+  const result = await chrome.storage.local.get(['userName']);
+  if (result.userName === "ADMIN_3749") {
+    return 'http://localhost:8585';
+  }
+  return 'https://spring.opencodingsociety.com';
+}
+
 // Leaderboard API
-const LEADERBOARD_API = 'http://localhost:8585/api/events/BUD_E_LEADERBOARD';
+async function getLeaderboardApiUrl() {
+  const baseUrl = await getBaseUrl();
+  return `${baseUrl}/api/events/BUD_E_LEADERBOARD`;
+}
 
 async function loadLeaderboard() {
   const body = document.getElementById('leaderboard-body');
@@ -153,7 +165,7 @@ async function loadLeaderboard() {
   body.innerHTML = '';
 
   try {
-    const response = await fetch(LEADERBOARD_API);
+    const response = await fetch(await getLeaderboardApiUrl());
     if (!response.ok) throw new Error('Failed to fetch leaderboard');
 
     let logs = await response.json();
@@ -209,7 +221,7 @@ async function submitScore() {
       score: Math.floor(result.totalProductiveTime || 0)
     };
 
-    const response = await fetch(LEADERBOARD_API, {
+    const response = await fetch(await getLeaderboardApiUrl(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ payload })
@@ -311,7 +323,8 @@ document.getElementById('generate-plan-btn').addEventListener('click', async () 
   };
 
   try {
-    const response = await fetch('http://localhost:8585/api/productivity_planner', {
+    const baseUrl = await getBaseUrl();
+    const response = await fetch(`${baseUrl}/api/productivity_planner`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
